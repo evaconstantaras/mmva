@@ -1,0 +1,24 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1536057640164.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3777156259",
+    "id" : "89E9E1F9",
+    "lastKnownWriteTime" : 1536063956,
+    "last_content_update" : 1536063956180,
+    "path" : "~/learning-r/mmva/mmva.Rmd",
+    "project_path" : "mmva.Rmd",
+    "properties" : {
+        "cursorPosition" : "80,0",
+        "last_setup_crc32" : "2C3121D0bb338d19",
+        "scrollLine" : "78",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

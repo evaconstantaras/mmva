@@ -1,0 +1,8 @@
+"0","library(tigris)"
+"0","ggplot(myanmar_map_set)+"
+"0","  geom_sf(aes(fill=Measure*100), color=""white"", size=.1)+"
+"0","  scale_fill_distiller(direction=1, name=""Population %"") +"
+"0","  labs(title=""Uneven development across Myanmar"", caption=""Source: themimu.info/"")+"
+"0","  facet_wrap(~map_labels)+"
+"0","  theme_void() +"
+"0","  theme(panel.grid.major = element_line(colour = 'transparent'))"

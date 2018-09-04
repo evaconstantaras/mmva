@@ -1,0 +1,136 @@
+---
+title: "Myanmar Vulnerability"
+author: "Eva Constantaras"
+date: "September 4, 2018"
+output: 
+  html_document:
+     theme: cerulean
+     highlight: pygments 
+     toc: true
+     toc_float: true
+---
+
+```{r setup, include=FALSE, warning=F, message=F}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Load packages 
+
+
+```{r loading, warning=F, message=F}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(sf)
+library(readr)
+library(DT)
+```
+
+##Import geographic data
+
+Data from http://geonode.themimu.info/layers/geonode%3Amyanmar_township_boundaries 
+
+```{r geographic, echo=TRUE, warning=F, message=F}
+myanmar_ts <- "data/myanmar_township_boundaries.shp"
+
+townships<-st_read(myanmar_ts)
+
+ggplot(townships)+
+  geom_sf()
+```
+
+##Import vulnerability data
+The data is from http://themimu.info/vulnerability-in-myanmar Note that no codebook is available and the data is sourced from several different agencies. I reformatted the data in Excel before uploading to R. 
+
+```{r vulnerability, echo=TRUE, warning=F, message=F}
+library(readxl)
+
+vuln <- read_excel("data/Myanmar_MIMU_Vulnerability.xls")
+
+str(vuln)
+
+vuln<-subset(vuln, select=-c(`State/Region Pcode`, `State/Region Name`, `District Pcode`, `District Name`, `Township Name`, `Number of Village Tracts`, `Number of Wards`))
+
+```
+##Clean data
+```{r clean, echo=TRUE, warning=F, message=F}
+#gather to create a column of Indicators
+vuln_gather <- gather(data=vuln, key="Indicator", value = "Measure", -`Township Pcode`, na.rm=F)
+
+#join datasets
+myanmar <- left_join(vuln_gather, townships, by=c(`Township Pcode`="TS_PCODE"))
+
+#narrow down indicators 
+myanmar_dev <- myanmar %>% 
+  filter(myanmar$Indicator %in% c("Avg (safe sanitation + improved drinking water)", 
+                                  "Average good roof and wall",
+                                  "Electricity for Lighting %__1" ,
+                                  "Literacy: % literate"))
+
+
+#rename indicators for clarity
+myanmar_map_set <- mutate(myanmar_dev, map_labels=case_when(
+                      Indicator =="Avg (safe sanitation + improved drinking water)"~"Clean water", 
+                      Indicator =="Literacy: % literate"~"Literacy",
+                      Indicator =="Average good roof and wall"~"Roof and walls",
+                      Indicator == "Electricity for Lighting %__1"~"Electric lighting"))
+unique(myanmar_map_set$map_labels)
+```
+##Map selected indicators 
+```{r map, echo=TRUE, warning=F, message=F}
+
+
+ggplot(myanmar_map_set)+
+  geom_sf(aes(fill=Measure*100), color="white", size=.1)+
+  scale_fill_distiller(direction=1, name="Population %") +
+  labs(title="Uneven development across Myanmar", caption="Source: themimu.info/")+
+  facet_wrap(~map_labels)+
+  theme_void() +
+  theme(panel.grid.major = element_line(colour = 'transparent'))
+```
+
+
+##Identify vulnerable states
+
+Now that we have a detailed picture of varied development across townships, I want to look at the overall proportion of vulnerable populations by state and determine whether states with ethnic minority populations were more vulnerable since 2014. The data is from http://themimu.info/vulnerability-in-myanmar 
+
+
+
+```{r chart data, echo=TRUE, warning=F, message=F}
+#bring in state names 
+myanmar_chart_2 <- vuln %>% 
+                  left_join(townships, by=c(`Township Pcode`="TS_PCODE"))
+```
+##Proportion vulnerable by state
+
+
+
+```
+#calculate total population and total vulnerable population by state
+```{r chart state data, echo=TRUE, warning=F, message=F}
+myanmar_sum <- myanmar_chart_2 %>% 
+  group_by(ST) %>% 
+  summarize(total_pop=sum(`Total Pop Both sexes`), total_vp=sum(`Approximate Vulnerable Population`)) 
+  datatable(myanmar_sum)
+  
+
+  
+#Calculate percentage of population that is vulnerable
+  
+myanmar_sum <- mutate(myanmar_sum, perc_vuln_pop=total_vp/total_pop*100) %>% 
+  arrange(desc(perc_vuln_pop))
+datatable(myanmar_sum)
+```
+##Create chart of states with the highest proportion of vulnerable people
+```{r chart 2 data, echo=TRUE, warning=F, message=F}
+ggplot(data = subset (myanmar_sum, ST %in% ST [1 : 9]))+ 
+       aes(x=reorder(ST, perc_vuln_pop), y=perc_vuln_pop, fill=ST)+
+  geom_bar(stat="identity")+
+  coord_flip()+
+  xlab("States") + ylab("Vulnerable population (%)")+
+  labs(title="Ethnic states most vulnerable before current crisis", 
+       subtitle = "Over half of citizens vulnerable in the poorest and most marginalized ethnic states",
+       caption="Source: Vulnerability Assessement, 2014 Census, themimu.info/")+
+      scale_fill_brewer()+
+      theme(legend.position="none")
+```

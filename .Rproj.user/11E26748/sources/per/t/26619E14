@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1536058174874.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3493041079",
+    "id" : "26619E14",
+    "lastKnownWriteTime" : 1536064461,
+    "last_content_update" : 1536064461265,
+    "path" : "~/learning-r/mmva/scripts/myanmar_vulnerability_map.R",
+    "project_path" : "scripts/myanmar_vulnerability_map.R",
+    "properties" : {
+        "cursorPosition" : "57,83",
+        "scrollLine" : "39"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

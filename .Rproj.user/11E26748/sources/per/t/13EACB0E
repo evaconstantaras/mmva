@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1535972406075.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "13EACB0E",
+    "lastKnownWriteTime" : 1535971307,
+    "last_content_update" : 1535972406075,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "1EDC8AEE",
+        "caption" : "myanmar_vuln",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=myanmar_vuln&cache_key=1EDC8AEE",
+        "displayedObservations" : 330,
+        "environment" : "",
+        "object" : "myanmar_vuln",
+        "preview" : 0,
+        "totalObservations" : 330,
+        "variables" : 3
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
